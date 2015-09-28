@@ -1,0 +1,14 @@
+/**
+ * blank
+ *
+ * @author  Siyuan Gao <siyuangao@gmail.com>
+ * @license MIT
+ */
+
+//  This is a sample if what the template should look like
+
+function template () {
+
+}
+
+export default template;
