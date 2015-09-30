@@ -7,21 +7,21 @@
       "featured": "/observer-mode/rest/featured",
       "limit": {
         "development": {
-          "0": {
+          "M": {
             "request": 500,
             "interval": 600000
           },
-          "1": {
+          "S": {
             "request": 10,
             "interval": 10
           }
         },
         "production": {
-          "0": {
+          "M": {
             "request": 180000,
             "interval": 600000
           },
-          "1": {
+          "S": {
             "request": 3000,
             "interval": 10
           }

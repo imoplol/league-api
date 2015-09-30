@@ -7,4 +7,4 @@
 
 import LeagueDriver from './index';
 
-var driver = new LeagueDriver({api_key: '1'});
+var driver = new LeagueDriver({api_key: '1', region: 'NA', platform: 'development'});

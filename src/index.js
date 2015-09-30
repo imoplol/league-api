@@ -11,11 +11,35 @@
 import  Winston         from 'winston';
 import  _               from 'lodash';
 import  TokenBucket     from 'tokenbucket';
+import  EndPoints       from './config/endpoints.json';
 
 class LeagueDriver {
+    /*!
+     *  Sample options
+     *  {
+     *      api_key: '00e033....',
+     *      platform: 'production',
+     *      region: 'NA'
+     *
+     *  }
+     */
     constructor(options) {
         //  Sets class properties
-        this.bucket = new TokenBucket();
+
+        //  These are the two buckets used for rate limiting
+        this.bucketS = new TokenBucket({
+            size: EndPoints.endpoints[options.region].limit[options.platform].S.request,
+            tokensToAddPerInterval: EndPoints.endpoints[options.region].limit[options.platform].S.request,
+            interval: EndPoints.endpoints[options.region].limit[options.platform].S.interval,
+            maxWait: 'minute'
+        });
+        this.bucketM = new TokenBucket({
+            size: EndPoints.endpoints[options.region].limit[options.platform].M.request,
+            tokensToAddPerInterval: EndPoints.endpoints[options.region].limit[options.platform].M.request,
+            interval: EndPoints.endpoints[options.region].limit[options.platform].M.interval,
+            maxWait: 'minute',
+            parentBucket: this.bucketS
+        });
         this.L = new (Winston.Logger)({
             transports: [
                 new (Winston.transports.Console)({
