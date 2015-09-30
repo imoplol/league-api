@@ -7,7 +7,9 @@
 
 //  This is a sample if what the template should look like
 
-function template () {
+import  Promise     from 'bluebird';
+
+function template (options) {
 
 }
 
