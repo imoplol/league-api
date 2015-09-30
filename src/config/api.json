@@ -1,6 +1,12 @@
 {
   "api": {
     "NA": {
+      "supported": [
+        "champion",
+        "current-game",
+        "recent-game",
+        "summoner"
+      ],
       "actions": [
         {
           "champion": {

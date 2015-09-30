@@ -10,10 +10,12 @@
  */
 import  Winston         from 'winston';
 import  _               from 'lodash';
+import  TokenBucket     from 'tokenbucket';
 
 class LeagueDriver {
     constructor(options) {
         //  Sets class properties
+        this.bucket = new TokenBucket();
         this.L = new (Winston.Logger)({
             transports: [
                 new (Winston.transports.Console)({

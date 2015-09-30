@@ -4,7 +4,29 @@
       "endpoint": "na.api.pvp.net",
       "path": "/api/lol/na",
       "observer": "/observer-mode/rest/consumer",
-      "featured": "/observer-mode/rest/featured"
+      "featured": "/observer-mode/rest/featured",
+      "limit": {
+        "development": {
+          "0": {
+            "request": 500,
+            "interval": 600000
+          },
+          "1": {
+            "request": 10,
+            "interval": 10
+          }
+        },
+        "production": {
+          "0": {
+            "request": 180000,
+            "interval": 600000
+          },
+          "1": {
+            "request": 3000,
+            "interval": 10
+          }
+        }
+      }
     }
   }
 }

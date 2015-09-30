@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "lodash": "^3.10.1",
+    "tokenbucket": "^0.3.2",
     "winston": "^1.0.2"
   }
 }
