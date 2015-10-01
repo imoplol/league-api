@@ -1,6 +1,7 @@
 {
   "endpoints":{
     "NA": {
+      "protocol": "https://",
       "endpoint": "na.api.pvp.net",
       "path": "/api/lol/na",
       "observer": "/observer-mode/rest/consumer",

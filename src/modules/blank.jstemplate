@@ -9,8 +9,14 @@
 
 import  Promise     from 'bluebird';
 
-function template (options) {
-
+function module (options) {
+    return new Promise((resolve, reject) => {   //  Must use arrow function for `this` to be passed correctly
+        if("life is good"){
+            resolve({something: 'anything'});
+        } else {
+            reject({anything: 'nothing'});
+        }
+    });
 }
 
-export default template;
+export default module;

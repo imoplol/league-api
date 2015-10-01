@@ -11,7 +11,6 @@
 import  Winston         from 'winston';
 import  _               from 'lodash';
 import  TokenBucket     from 'tokenbucket';
-import  EndPoints       from './config/endpoints.json';
 
 class LeagueDriver {
     /*!
@@ -23,27 +22,35 @@ class LeagueDriver {
      *
      *  }
      */
-    constructor(options) {
+    constructor(endpoints, api, options) {
+
+        let TAG = "LeagueDriver:constructor";
 
         //  Sets class properties
+        this.endpoints      = endpoints;
+        this.api            = api;
+        this.options        = options;
+        this.api_key        = options.api_key;
+        this.defaultParams  = [`api_key=${this.api_key}`];
         //  These are the two buckets used for rate limiting
         this.bucketS = new TokenBucket({
-            size: EndPoints.endpoints[options.region].limit[options.platform].S.request,
-            tokensToAddPerInterval: EndPoints.endpoints[options.region].limit[options.platform].S.request,
-            interval: EndPoints.endpoints[options.region].limit[options.platform].S.interval,
+            size: this.endpoints.endpoints[options.region].limit[options.platform].S.request,
+            tokensToAddPerInterval: this.endpoints.endpoints[options.region].limit[options.platform].S.request,
+            interval: this.endpoints.endpoints[options.region].limit[options.platform].S.interval,
             maxWait: 'minute'
         });
         this.bucketM = new TokenBucket({
-            size: EndPoints.endpoints[options.region].limit[options.platform].M.request,
-            tokensToAddPerInterval: EndPoints.endpoints[options.region].limit[options.platform].M.request,
-            interval: EndPoints.endpoints[options.region].limit[options.platform].M.interval,
+            size: this.endpoints.endpoints[options.region].limit[options.platform].M.request,
+            tokensToAddPerInterval: this.endpoints.endpoints[options.region].limit[options.platform].M.request,
+            interval: this.endpoints.endpoints[options.region].limit[options.platform].M.interval,
             maxWait: 'minute',
             parentBucket: this.bucketS
         });
         this.L = new (Winston.Logger)({
             transports: [
                 new (Winston.transports.Console)({
-                    colorize    : 'all'
+                    colorize    : 'all',
+                    level       : 'verbose'
                 })
             ]
         });
@@ -53,7 +60,6 @@ class LeagueDriver {
             error   :   (tag, log) => {this.L.error(`[${tag}] : ${log}`);},
             warn    :   (tag, log) => {this.L.warn(`[${tag}] : ${log}`);}
         };
-        this.api_key = options.api_key;
         //  Load all modules for the league driver
         this.loadModules();
         this.log.verbose(TAG, `started with options: ${JSON.stringify(options)}`);
@@ -85,14 +91,19 @@ class LeagueDriver {
     module(name, options) {
 
         let TAG = 'LeagueDriver:module';
+
+        //console.log(this);
+
         //  This is the only access for modules, provide rate limiting
         if(typeof(this[name]) == 'function') {
             //  Invoke function
-            this.bucketM.removeTokens(1).then(function(remainingTokens) {
+            this.log.verbose(TAG, `invoking module: ${name}`);
+            this.bucketM.removeTokens(1).then((remainingTokens) => {
                 this.log.verbose(TAG, `removed 1 token, remaining ${remainingTokens}`);
-                return this[name](options);     //  Finally call the function and return
+                return this[name](options, this.defaultParams);     //  Finally call the function and return
             });
         } else {
+            this.log.verbose(TAG, `invoking module: ${name} error`);
             return new Promise(function (resolve) {
                 resolve({
                     type: 'error',

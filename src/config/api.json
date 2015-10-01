@@ -7,45 +7,40 @@
         "recent-game",
         "summoner"
       ],
-      "actions": [
-        {
-          "champion": {
-            "variations":[
-              "champion",
-              "champion/{id}"
-            ],
-            "observer": false,
-            "version": "v1.2"
-          }
+      "actions": {
+        "champion":{
+          "variations":[
+            "champion",
+            "champion/{id}"
+          ],
+          "observer": false,
+          "version": "v1.2"
         },
+        "current-game":
         {
-          "current-game": {
-            "variations":[
-              "getSpectatorGameInfo/NA1/{summonerID}"
-            ],
-            "observer": true,
-            "version": "v1.0"
-          }
+          "variations":[
+            "getSpectatorGameInfo/NA1/{summonerID}"
+          ],
+          "observer": true,
+          "version": "v1.0"
         },
+        "recent-game":
         {
-          "recent-game": {
-            "variations":[
-              "game/by-summoner/{summonerID}/recent"
-            ],
-            "observer": false,
-            "version": "v1.3"
-          }
+          "variations":[
+            "game/by-summoner/{summonerID}/recent"
+          ],
+          "observer": false,
+          "version": "v1.3"
         },
+        "summoner":
         {
-          "summoner": {
-            "variations":[
-              "summoner/by-name/{summonerName}"
-            ],
-            "observer": false,
-            "version": "v1.4"
-          }
+          "variations":[
+            "summoner/by-name/{summonerName}"
+          ],
+          "observer": false,
+          "version": "v1.4"
         }
-      ]
+      }
     }
   }
 }
