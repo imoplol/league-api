@@ -19,6 +19,6 @@ var driver = new LeagueDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'champion'}).then(function(result) {
+driver.module("legacy", {action: 'champion', params: {id: '12'}}).then(function(result) {
     console.log(result);
 });

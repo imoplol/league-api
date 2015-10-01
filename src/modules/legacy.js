@@ -14,7 +14,7 @@ function module (options, URLParams) {
     return new Promise((resolve, reject) => {
         var urls;
         if(_.includes(this.api.api[this.options.region].supported, options.action)) {
-            urls = URLBuilder(this.endpoints, this.api, this.options.region, options.action, URLParams);
+            urls = URLBuilder(this.endpoints, this.api, this.options.region, options.action, options.params, URLParams);
         } else {
             reject({error: 'action not supported in legacy'});
         }
