@@ -19,8 +19,6 @@ var driver = new LeagueDriver(Endpoints,
     }
 );
 
-console.log('done');
-
-driver.module("legacy", {action: 'champion'});
-
-console.log('done 2');
+driver.module("legacy", {action: 'champion'}).then(function(result) {
+    console.log(result);
+});

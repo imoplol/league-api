@@ -14,7 +14,6 @@ import UrlJoin      from 'url-join';
 import _            from 'lodash';
 
 function urlBuilder(endpoints, api, region, name, URLParams) {
-    console.log(endpoints, api, region, name);
     var urls = [ ];
     for(let i in api.api[region].actions[name].variations) {
         urls.push(UrlJoin(endpoints.endpoints[region].protocol,

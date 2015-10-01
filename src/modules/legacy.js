@@ -18,8 +18,7 @@ function module (options, URLParams) {
         } else {
             reject({error: 'action not supported in legacy'});
         }
-        console.log(urls);
-        resolve({ });
+        resolve(urls);
     });
 }
 
