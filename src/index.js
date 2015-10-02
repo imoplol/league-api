@@ -6,13 +6,13 @@
  */
 
 /*!
- *  League of Legends API Driver for imop.lol
+ *  API Driver for imop.lol
  */
 import  Winston         from 'winston';
 import  _               from 'lodash';
 import  TokenBucket     from 'tokenbucket';
 
-class LeagueDriver {
+class APIDriver {
     /*!
      *  Sample options
      *  {
@@ -24,7 +24,7 @@ class LeagueDriver {
      */
     constructor(endpoints, api, options) {
 
-        let TAG = "LeagueDriver:constructor";
+        let TAG = "APIDriver:constructor";
 
         //  Sets class properties
         this.endpoints      = endpoints;
@@ -67,7 +67,7 @@ class LeagueDriver {
 
     loadModules() {
         //  Log tag
-        let TAG = "LeagueDriver:loadModules";
+        let TAG = "APIDriver:loadModules";
         //  Filename regex
         var regex = /^([a-z0-9_]+).js$/;
 
@@ -84,13 +84,13 @@ class LeagueDriver {
     }
     loadModule(file) {
         //  Log tag
-        let TAG = "LeagueDriver:loadModule";
+        let TAG = "APIDriver:loadModule";
         this.log.info(TAG, `Loading module: ${file}`);
         _.assign(this, require(file));
     }
     module(name, options) {
 
-        let TAG = 'LeagueDriver:module';
+        let TAG = 'APIDriver:module';
 
         //console.log(this);
 
@@ -121,4 +121,4 @@ class LeagueDriver {
 
 }
 
-export default LeagueDriver;
+export default APIDriver;

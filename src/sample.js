@@ -5,11 +5,11 @@
  * @license MIT
  */
 
-import LeagueDriver from './index';
+import APIDriver from './index';
 import Endpoints    from './config/endpoints.json';
 import API          from './config/api.json';
 
-var driver = new LeagueDriver(Endpoints,
+var driver = new APIDriver(Endpoints,
     API,
     {
         api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
@@ -19,6 +19,6 @@ var driver = new LeagueDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'champion', params: {id: '12'}}).then(function(result) {
+driver.module("legacy", {action: 'champion'}).then(function(result) {
     console.log(result);
 });

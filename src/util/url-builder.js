@@ -16,6 +16,7 @@ import _            from 'lodash';
 function urlBuilder(endpoints, api, region, name, params, URLParams) {
     var urls = [ ];
     var url = '';
+    var regex = new RegExp("{[a-z0-9_]+}", "ig");
     for(let i in api.api[region].actions[name].variations) {
         url = UrlJoin(endpoints.endpoints[region].protocol,
             endpoints.endpoints[region].endpoint,
@@ -25,10 +26,22 @@ function urlBuilder(endpoints, api, region, name, params, URLParams) {
             (URLParams.length == 1) ? `?${URLParams[0]}` : _.union(`?${URLParams[0]}`, _.rest(URLParams)));
         if(params) {
             for(let property of Object.keys(params)) {
-                url = url.replace(`{${property}}`, params[property]);
+                //  Replace placeholder
+                var temp = url.replace(`{${property}}`, params[property]);
+                if(temp == url) {
+                    //  Nothing is replaced, exit and exit
+                    url = '';
+                    break;
+                }
+                url = temp;
             }
         }
-        urls.push(url);
+        //  Check the string, see if we are going to push anything
+        if(url) {
+            if(!url.match(regex)) {
+                urls.push(url);
+            }
+        }
     }
     return urls;
 }

@@ -8,6 +8,7 @@
 
 import  Promise             from 'bluebird';
 import  _                   from 'lodash';
+import  HTTPClient          from 'request-promise';
 import  URLBuilder          from '../util/url-builder';
 
 function module (options, URLParams) {
@@ -18,7 +19,11 @@ function module (options, URLParams) {
         } else {
             reject({error: 'action not supported in legacy'});
         }
-        resolve(urls);
+
+        //  Bad design, need a way to not hard code this
+        HTTPClient(urls[0]).then((response) => {
+            resolve(response);
+        }).catch((e) => { reject(e); });
     });
 }
 
