@@ -3,9 +3,6 @@
     "NA": {
       "protocol": "https://",
       "endpoint": "na.api.pvp.net",
-      "path": "/api/lol/na",
-      "observer": "/observer-mode/rest/consumer",
-      "featured": "/observer-mode/rest/featured",
       "limit": {
         "development": {
           "M": {

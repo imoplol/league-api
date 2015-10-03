@@ -99,14 +99,11 @@ class APIDriver {
             //  Invoke function
             this.log.verbose(TAG, `invoking module: ${name}`);
             return new Promise((resolve, reject) => {
-                this.bucketM.removeTokens(1).then((remainingTokens) => {
-                    this.log.verbose(TAG, `removed 1 token, remaining ${remainingTokens}`);
-                    this[name](options, this.defaultParams).then((result) => {
-                        resolve(result);
-                    }).catch((e) => {
-                        reject(e);
-                    });     //  Finally call the function and return
-                });
+                this[name](options, this.defaultParams).then((result) => {
+                    resolve(result);
+                }).catch((e) => {
+                    reject(e);
+                });     //  Finally call the function and return
             });
         } else {
             this.log.verbose(TAG, `invoking module: ${name} error`);

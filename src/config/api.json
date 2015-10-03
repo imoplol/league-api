@@ -2,43 +2,68 @@
   "api": {
     "NA": {
       "supported": [
-        "champion",
+        "free-champion",
         "current-game",
         "recent-game",
-        "summoner"
+        "summoner",
+        "champion-info"
       ],
       "actions": {
-        "champion":{
+        "free-champion":{
           "variations":[
             "champion",
             "champion/{id}"
           ],
-          "observer": false,
-          "version": "v1.2"
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v1.2"
+          },
+          "limitrate": true
         },
         "current-game":
         {
           "variations":[
             "getSpectatorGameInfo/NA1/{summonerID}"
           ],
-          "observer": true,
-          "version": "v1.0"
+          "options": {
+            "path": "/observer-mode/rest/consumer",
+            "version": "v1.0"
+          },
+          "limitrate": true
         },
         "recent-game":
         {
           "variations":[
             "game/by-summoner/{summonerID}/recent"
           ],
-          "observer": false,
-          "version": "v1.3"
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v1.3"
+          },
+          "limitrate": true
         },
         "summoner":
         {
           "variations":[
             "summoner/by-name/{summonerName}"
           ],
-          "observer": false,
-          "version": "v1.4"
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v1.4"
+          },
+          "limitrate": true
+        },
+        "champion-info":
+        {
+          "variations":[
+            "champion",
+            "champion/{id}"
+          ],
+          "options": {
+            "path": "/api/lol/static-data/na",
+            "version": "v1.2"
+          },
+          "limitrate": false
         }
       }
     }

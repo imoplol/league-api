@@ -19,6 +19,14 @@ var driver = new APIDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'champion'}).then(function(result) {
+driver.module("legacy", {action: 'champion-info'}).then(function(result) {
     console.log(result);
+}).catch((e) => {
+    console.error(e);
+});
+
+driver.module("legacy", {action: 'free-champion'}).then(function(result) {
+    console.log(result);
+}).catch((e) => {
+    console.error(e);
 });
