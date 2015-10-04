@@ -19,7 +19,7 @@ var driver = new APIDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'summoner-ranked', params: {summonerId: 19825779}, urlParams: {season: 'SEASON2015'}}).then(function(result) {
+driver.module("legacy", {action: 'summoner-info', params: {summonerName: 'Mamoritai'}}).then(function(result) {
     console.log(result);
 }).catch((e) => {
     console.error(e);

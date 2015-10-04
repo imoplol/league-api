@@ -12,7 +12,8 @@
         "spell-info",
         "match-info",
         "summoner-ranked",
-        "summoner-summary"
+        "summoner-summary",
+        "summoner-info"
       ],
       "actions": {
         "free-champion":{
@@ -137,6 +138,17 @@
           "options": {
             "path": "/api/lol/na",
             "version": "v1.3"
+          },
+          "limitrate": true
+        },
+        "summoner-info":
+        {
+          "variations":[
+            "summoner/by-name/{summonerName}"
+          ],
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v1.4"
           },
           "limitrate": true
         }
