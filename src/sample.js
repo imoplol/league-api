@@ -19,7 +19,7 @@ var driver = new APIDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'item-info', params: {id: 1054}, urlParams: {itemData: "all"}}).then(function(result) {
+driver.module("legacy", {action: 'summoner-ranked', params: {summonerId: 19825779}, urlParams: {season: 'SEASON2015'}}).then(function(result) {
     console.log(result);
 }).catch((e) => {
     console.error(e);

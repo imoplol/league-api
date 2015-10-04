@@ -7,7 +7,12 @@
         "recent-game",
         "summoner",
         "champion-info",
-        "item-info"
+        "item-info",
+        "mastery-info",
+        "spell-info",
+        "match-info",
+        "summoner-ranked",
+        "summoner-summary"
       ],
       "actions": {
         "free-champion":{
@@ -77,6 +82,63 @@
             "version": "v1.2"
           },
           "limitrate": false
+        },
+        "mastery-info":
+        {
+          "variations":[
+            "mastery",
+            "mastery/{id}"
+          ],
+          "options": {
+            "path": "/api/lol/static-data/na",
+            "version": "v1.2"
+          },
+          "limitrate": false
+        },
+        "spell-info":
+        {
+          "variations":[
+            "summoner-spell",
+            "summoner-spell/{id}"
+          ],
+          "options": {
+            "path": "/api/lol/static-data/na",
+            "version": "v1.2"
+          },
+          "limitrate": false
+        },
+        "match-info":
+        {
+          "variations":[
+            "match/{matchId}"
+          ],
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v2.2"
+          },
+          "limitrate": true
+        },
+        "summoner-ranked":
+        {
+          "variations":[
+            "stats/by-summoner/{summonerId}/ranked"
+          ],
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v1.3"
+          },
+          "limitrate": true
+        },
+        "summoner-summary":
+        {
+          "variations":[
+            "stats/by-summoner/{summonerId}/summary"
+          ],
+          "options": {
+            "path": "/api/lol/na",
+            "version": "v1.3"
+          },
+          "limitrate": true
         }
       }
     }
