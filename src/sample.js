@@ -19,7 +19,7 @@ var driver = new APIDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'champion-info', params: {id: 412}}).then(function(result) {
+driver.module("legacy", {action: 'item-info', params: {id: 1054}, urlParams: {itemData: "all"}}).then(function(result) {
     console.log(result);
 }).catch((e) => {
     console.error(e);

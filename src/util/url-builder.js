@@ -41,9 +41,9 @@ function urlBuilder(endpoints, api, region, name, params, URLParams) {
         //  Append any url params
         for(let i in URLParams) {
             if(i == 0) {
-                url = UrlJoin(url, "?" + URLParams[i]);
+                url = url + "?" + URLParams[i];
             } else {
-                url = UrlJoin(url, URLParams[i]);
+                url = url + ("&" + URLParams[i]);
             }
         }
 

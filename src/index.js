@@ -98,8 +98,12 @@ class APIDriver {
         if(typeof(this[name]) == 'function') {
             //  Invoke function
             this.log.verbose(TAG, `invoking module: ${name}`);
+            var urlParams = [];
+            for(let property of Object.keys(options.urlParams)) {
+                urlParams.push(`${property}=${options.urlParams[property]}`);
+            }
             return new Promise((resolve, reject) => {
-                this[name](options, this.defaultParams).then((result) => {
+                this[name](options, _.union(urlParams, this.defaultParams)).then((result) => {
                     resolve(result);
                 }).catch((e) => {
                     reject(e);
