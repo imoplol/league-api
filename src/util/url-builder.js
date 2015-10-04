@@ -40,15 +40,18 @@ function urlBuilder(endpoints, api, region, name, params, URLParams) {
 
         //  Append any url params
         for(let i in URLParams) {
-            url = UrlJoin(url, "?" + URLParams[i]);
+            if(i == 0) {
+                url = UrlJoin(url, "?" + URLParams[i]);
+            } else {
+                url = UrlJoin(url, URLParams[i]);
+            }
         }
-
 
         if(params) {
             for(let property of Object.keys(params)) {
                 //  Replace placeholder
                 var temp = url.replace(`{${property}}`, params[property]);
-                if(temp == url && url.match(regex)) {
+                if(temp == url) {
                     //  Nothing is replaced, exit and exit
                     url = '';
                     break;
