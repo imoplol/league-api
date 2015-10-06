@@ -23,12 +23,22 @@ function module (options, URLParams) {
             reject({error: 'action not supported in legacy'});
         });
     }
+    var request = {
+        url: urls[0],
+        transform: function(body, response) {
+            if(response.headers['content-type'].indexOf('application/json') > -1) {
+                return JSON.parse(body);
+            } else {
+                return body;
+            }
+        }
+    };
     return new Promise((resolve, reject) => {
         //  Bad design, need a way to not hard code this
         if(this.api.api[this.options.region].actions[options.action].limitrate) {
             this.bucketM.removeTokens(1).then((remainingTokens) => {
                 this.log.verbose(TAG, `removed 1 token, remaining ${remainingTokens}`);
-                HTTPClient(urls[0]).then((response) => {
+                HTTPClient(request).then((response) => {
                     resolve(response);
                 }).catch((e) => {
                     reject(e);
@@ -36,7 +46,7 @@ function module (options, URLParams) {
             });
         } else {
             this.log.verbose(TAG, 'skipping rate limiting.');
-            HTTPClient(urls[0]).then((response) => {
+            HTTPClient(request).then((response) => {
                 resolve(response);
             }).catch((e) => {
                 reject(e);
