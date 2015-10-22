@@ -19,11 +19,14 @@ var driver = new APIDriver(Endpoints,
     }
 );
 
-driver.module("legacy", {action: 'summoner-info', params: {summonerName: 'Mamoritai'}}).then(function(result) {
-    console.log(result);
-}).catch((e) => {
-    console.error(e);
-});
+function callapi () {
+    driver.module("legacy", {action: 'summoner-info', params: {summonerName: 'Mamoritai'}}).then(function(result) {
+        //console.log(result);
+    }).catch((e) => {
+        console.error(e);
+    });
+}
+setInterval(callapi, 1000);
 
 //driver.module("legacy", {action: 'free-champion'}).then(function(result) {
 //    console.log(result);
