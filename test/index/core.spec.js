@@ -29,8 +29,4 @@ describe('index', function() {
   it('should return APIDriver Object', function(){
     expect(apidriverObj).to.be.an.instanceof(APIDriver);
   });
-
-  it('should return correct tag name', function(){
-    expect(apidriverObj.TAG).to.equal('APIDriver:constructor');
-  });
 });
