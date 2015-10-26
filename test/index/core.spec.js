@@ -16,6 +16,7 @@ Chai.use(require('sinon-chai'));
 Chai.should();
 
 var expect         = Chai.expect;
+var index      = require('../../src/index.js');
 
 describe('index', function() {
   var options = {
