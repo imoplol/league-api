@@ -26,5 +26,7 @@ lib
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+
+# Mac OS X system files and JetBrain IDE files 
 .DS_Store
-.idea/
+.idea
