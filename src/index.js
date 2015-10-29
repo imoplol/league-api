@@ -11,6 +11,7 @@
 import  Winston         from 'winston';
 import  _               from 'lodash';
 import  TokenBucket     from 'tokenbucket';
+import  Promise         from 'bluebird';
 
 class APIDriver {
     /*!
@@ -113,8 +114,8 @@ class APIDriver {
             });
         } else {
             this.log.verbose(TAG, `invoking module: ${name} error`);
-            return new Promise(function (resolve) {
-                resolve({
+            return new Promise(function (resolve, reject) {
+                reject({
                     type: 'error',
                     error: 'module is not a function'
                 });

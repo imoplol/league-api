@@ -6,7 +6,7 @@
   "scripts": {
     "start": "gulp && node .",
     "test": "gulp && ./node_modules/.bin/mocha",
-    "posttest": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec"
+    "cover": "node --harmony ./node_modules/istanbul-harmony/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports test"
   },
   "repository": {
     "type": "git",
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "bluebird": "^2.10.1",
+    "istanbul-harmony": "^0.3.16",
     "kue": "^0.9.5",
     "lodash": "^3.10.1",
     "request-promise": "^0.4.3",
