@@ -21,9 +21,10 @@ var expect         = Chai.expect;
 describe('utils', function() {
   it('should build correct url', function() {
     var region = 'NA';
-    var name = 'summoner';
-    var params = '';
+    var name = 'summoner-info';
+    var params = {summonerName: 'Mamoritai'};
     var URLParams = '';
-    // expect(urlBuilder(Endpoints, API, region, name, params, URLParams)).to.equal([]);
+    var result = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/Mamoritai";
+    expect(urlBuilder(Endpoints, API, region, name, params, URLParams)[0]).equal(result);
   });
 });
