@@ -46,7 +46,7 @@ describe('utils', function() {
         expect(urlBuilder(Endpoints, API, region, name, params, URLParams)[0]).equal(result);
     });
 
-    it('should return undefined when params have key == value', function(){
+    it('it should return undefined if passed wrong param', function(){
         var region = 'NA';
         var name = 'summoner-info';
         var params = {summoner: 'summoner'};
