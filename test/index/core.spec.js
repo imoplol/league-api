@@ -19,15 +19,17 @@ var expect         = Chai.expect;
 var index      = require('../../src/index.js');
 
 describe('index', function() {
-  var options = {
-    api_key: '1234',
-    platform: 'production',
-    region: 'NA'
-  };
-  class APIDriver{};
-  var apidriverObj      = new APIDriver(Endpoints,API,options);
+    it('should return APIDriver Object', function(){
+        var options = {
+            api_key: '1234',
+            platform: 'production',
+            region: 'NA'
+        };
+        class APIDriver{};
+        var apidriverObj      = new APIDriver(Endpoints,API,options);
+        expect(apidriverObj).to.be.an.instanceof(APIDriver);
+    });
 
-  it('should return APIDriver Object', function(){
-    expect(apidriverObj).to.be.an.instanceof(APIDriver);
-  });
+    
+
 });
