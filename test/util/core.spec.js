@@ -45,4 +45,13 @@ describe('utils', function() {
         var result = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/Mamoritai?latest&clean";
         expect(urlBuilder(Endpoints, API, region, name, params, URLParams)[0]).equal(result);
     });
+
+    it('should return undefined when params have key == value', function(){
+        var region = 'NA';
+        var name = 'summoner-info';
+        var params = {summoner: 'summoner'};
+        var URLParams = '';
+        var result = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/Mamoritai";
+        expect(urlBuilder(Endpoints, API, region, name, params, URLParams)[0]).equal(undefined);
+    });
 });
