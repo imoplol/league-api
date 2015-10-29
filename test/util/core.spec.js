@@ -4,8 +4,8 @@
  * @author  Rock Hu <rockia@mac.com>
  * @license MIT
  */
- import Endpoints    from '../../src/config/endpoints.json';
- import API          from '../../src/config/api.json';
+ var Endpoints    = require('../../src/config/endpoints.json');
+ var API          = require('../../src/config/api.json');
 
 
 var Sinon           = require('sinon');

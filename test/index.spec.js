@@ -5,8 +5,8 @@
  * @license MIT
  */
 
- import Endpoints    from '../src/config/endpoints.json';
- import API          from '../src/config/api.json';
+var Endpoints   = require('../src/config/endpoints.json');
+var API         = require('../src/config/api.json');
 
 var Chai           = require('chai');
 Chai.use(require('sinon-chai'));

@@ -4,9 +4,9 @@
  * @author  Rock Hu <rockia@mac.com>
  * @license MIT
  */
- import Endpoints    from '../../src/config/endpoints.json';
- import API          from '../../src/config/api.json';
- import APIDriver    from '../../src/index.js';
+ var Endpoints    = require('../../src/config/endpoints.json');
+ var API          = require('../../src/config/api.json');
+ var APIDriver    = require('../../src/index.js');
 
 
 var Sinon           = require('sinon');
@@ -26,7 +26,7 @@ var options = {
     region: 'NA'
 };
 
-let TAG = 'test';
+var TAG = 'test';
 
 describe('index', function() {
     it('should return APIDriver Object', function(){
@@ -95,6 +95,21 @@ describe('index', function() {
             }
         );
         driver.module("legacy", {action: 'not an action', params: {summonerName: 'Mamoritai'}}).should.to.be.rejected.and.notify(done);
+    });
+
+    it('should call with urlparams', function(done){
+        var driver = new APIDriver(Endpoints,
+            API,
+            {
+                api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
+                region: 'NA',
+                platform: 'development',
+                urlParams: [ ]
+            }
+        );
+        driver.module("legacy", {action: 'match-info', params: {matchId: 1965880269}, urlParams: {includeTimeline: true}}).should.to.be.fulfilled.then(function (result) {
+            result.matchId.should.equal(1965880269);
+        }).should.notify(done);
     });
 
 
