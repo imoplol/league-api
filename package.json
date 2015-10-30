@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/gulp coverage",
-    "posttest": "cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js",
+    "posttest": "cat ./coverage/coverage-final.json | ./node_modules/codecov.io/bin/codecov.io.js",
     "prepublish": "./node_modules/.bin/gulp rebuild"
   },
   "dependencies": {
