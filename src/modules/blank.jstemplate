@@ -9,14 +9,15 @@
 
 import  Promise     from 'bluebird';
 
-function module (options) {
-    return new Promise((resolve, reject) => {   //  Must use arrow function for `this` to be passed correctly
-        if("life is good"){
-            resolve({something: 'anything'});
-        } else {
-            reject({anything: 'nothing'});
-        }
-    });
+async function module (options) {
+
+  const response = await someLongOperation(options);
+
+  if ('life is good') {
+    return { foo: 'bar' };
+  }
+
+  throw new Error('Crap!');
 }
 
 export default module;

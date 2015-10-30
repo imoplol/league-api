@@ -3,56 +3,47 @@
  * calls Riot's legacy API
  *
  * @author  Siyuan Gao <siyuangao@gmail.com>
+ * @author  Denis Luchkin-Zhou <denis@ricepo.com>
  * @license MIT
  */
 
-import  Promise             from 'bluebird';
-import  _                   from 'lodash';
-import  HTTPClient          from 'request-promise';
-import  URLBuilder          from '../util/url-builder';
+import _           from 'lodash';
+import Debug       from 'debug';
+import Request     from 'request-promise';
 
-function module (options, URLParams) {
+async function legacy(options, query) {
 
-    let TAG = "legacy";
+  const debug = Debug('legacy');
 
-    var urls;
-    if(_.includes(this.api.api[this.options.region].supported, options.action)) {
-        urls = URLBuilder(this.endpoints, this.api, this.options.region, options.action, options.params, URLParams);
-    } else {
-        return new Promise((resolve, reject) => {
-            reject({error: 'action not supported in legacy'});
-        });
+  const meta = this.api.api[this.options.region];
+
+  let urls;
+  if (_.includes(meta.supported, options.action)) {
+    urls = this.buildUrl(this.options.region, options.action, options.params, query);
+  } else {
+    throw new Error('Action not supported in legacy');
+  }
+
+  const request = {
+    url: urls[0],
+    transform: function(body, response) {
+      if (response.headers['content-type'].indexOf('application/json') > -1) {
+        return JSON.parse(body);
+      }
+      return body;
     }
-    var request = {
-        url: urls[0],
-        transform: function(body, response) {
-            if(response.headers['content-type'].indexOf('application/json') > -1) {
-                return JSON.parse(body);
-            } else {
-                return body;
-            }
-        }
-    };
-    return new Promise((resolve, reject) => {
-        //  Bad design, need a way to not hard code this
-        if(this.api.api[this.options.region].actions[options.action].limitrate) {
-            this.bucketM.removeTokens(1).then((remainingTokens) => {
-                this.log.verbose(TAG, `removed 1 token, remaining ${remainingTokens}`);
-                HTTPClient(request).then((response) => {
-                    resolve(response);
-                }).catch((e) => {
-                    reject(e);
-                });
-            });
-        } else {
-            this.log.verbose(TAG, 'skipping rate limiting.');
-            HTTPClient(request).then((response) => {
-                resolve(response);
-            }).catch((e) => {
-                reject(e);
-            });
-        }
-    });
+  };
+
+  if (meta.actions[options.action].limitrate) {
+    const remaining = await this.bucketM.removeTokens(1);
+    debug(`removed 1 token, remaining ${remaining}`);
+  }
+
+  return Request(request);
 }
 
-export default {legacy: module};
+export default function(client) {
+
+  client.legacy = legacy;
+
+}

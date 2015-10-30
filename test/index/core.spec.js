@@ -2,115 +2,118 @@
  * util/core.spec.js
  *
  * @author  Rock Hu <rockia@mac.com>
+ * @author  Denis Luchkin-Zhou <denis@ricepo.com>
  * @license MIT
  */
- var Endpoints    = require('../../src/config/endpoints.json');
- var API          = require('../../src/config/api.json');
- var APIDriver    = require('../../src/index.js');
+const API          = dofile('lib/config/api.json');
+const APIDriver    = dofile('lib/index.js');
+const Endpoints    = dofile('lib/config/endpoints.json');
 
-
-var Sinon           = require('sinon');
-var Chai            = require('chai');
-var Path            = require('path');
-
-Chai.use(require('sinon-chai'));
-Chai.use(require('chai-as-promised'));
-Chai.should();
-
-var expect         = Chai.expect;
-var index      = require('../../src/index.js');
-
-var options = {
-    api_key: '1234',
-    platform: 'production',
-    region: 'NA'
+const options = {
+  api_key: '1234',
+  platform: 'production',
+  region: 'NA'
 };
 
-var TAG = 'test';
-
 describe('index', function() {
-    it('should return APIDriver Object', function(){
-        var apidriverObj      = new APIDriver(Endpoints,API,options);
-        expect(apidriverObj).to.be.an.instanceof(APIDriver);
+
+
+  it('should return APIDriver Object', function() {
+    const apidriverObj = new APIDriver(Endpoints, API, options);
+    expect(apidriverObj).to.be.an.instanceof(APIDriver);
+  });
+
+  it('should should fail when calling APIDriver as function', function() {
+    const params = {
+      api_key: '1234',
+      platform: 'production',
+      region: 'NA'
+    };
+    expect(APIDriver.bind(Endpoints, API, params)).to.throw();
+  });
+
+  it('should load modules', function() {
+    const apidriverObj = new APIDriver(Endpoints, API, options);
+    apidriverObj.loadModule(__dirname + '/../../lib/modules/legacy.js');
+  });
+
+  it('should call api with result', co(function*() {
+    const driver = new APIDriver(Endpoints,
+      API, {
+        api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
+        region: 'NA',
+        platform: 'development',
+        urlParams: { }
+      }
+    );
+    const result = yield driver.module('legacy', {
+      action: 'summoner-info',
+      params: {
+        summonerName: 'Mamoritai'
+      }
+    });
+    expect(result).to.exist;
+  }));
+
+  it('should fail with unexpected module', function() {
+    const driver = new APIDriver(Endpoints,
+      API, {
+        api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
+        region: 'NA',
+        platform: 'development',
+        urlParams: { }
+      }
+    );
+    const promise = driver.module('not a module', {
+      action: 'summoner-info',
+      params: {
+        summonerName: 'Mamoritai'
+      }
+    });
+    expect(promise).to.be.rejected;
+  });
+
+  it('should fail with unexpected action', function() {
+    const driver = new APIDriver(Endpoints,
+      API, {
+        api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
+        region: 'NA',
+        platform: 'development',
+        urlParams: { }
+      }
+    );
+    const promise = driver.module('legacy', {
+      action: 'not an action',
+      params: {
+        summonerName: 'Mamoritai'
+      }
     });
 
-    it('should should fail when calling APIDriver as function', function(){
-        var options = {
-            api_key: '1234',
-            platform: 'production',
-            region: 'NA'
-        };
-        expect(APIDriver.bind(Endpoints,API,options)).to.throw();
+    expect(promise).to.be.rejected;
+  });
+
+  it('should call with urlparams', co(function*() {
+    const driver = new APIDriver(Endpoints,
+      API, {
+        api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
+        region: 'NA',
+        platform: 'development',
+        urlParams: { }
+      }
+    );
+    const result = yield driver.module('legacy', {
+      action: 'match-info',
+      params: {
+        matchId: 1965880269
+      },
+      urlParams: {
+        includeTimeline: true
+      }
     });
 
-    it('loggers should be a function', function(){
-        var apidriverObj      = new APIDriver(Endpoints,API,options);
-        apidriverObj.log.verbose(TAG, 'test verbose');
-        apidriverObj.log.info(TAG, 'test info');
-        apidriverObj.log.warn(TAG, 'test warn');
-        apidriverObj.log.error(TAG, 'test error');
-    });
-
-    it('should load modules', function(){
-        var apidriverObj      = new APIDriver(Endpoints,API,options);
-        apidriverObj.loadModule(__dirname + '/../../src/modules/legacy.js');
-    });
-
-    it('should call api with result', function(done){
-        var driver = new APIDriver(Endpoints,
-            API,
-            {
-                api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
-                region: 'NA',
-                platform: 'development',
-                urlParams: [ ]
-            }
-        );
-        driver.module("legacy", {action: 'summoner-info', params: {summonerName: 'Mamoritai'}}).should.to.be.fulfilled.then(function (result) {
-            result.should.exist;
-        }).should.notify(done);
-    });
-
-    it('should fail with unexpected module', function(done){
-        var driver = new APIDriver(Endpoints,
-            API,
-            {
-                api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
-                region: 'NA',
-                platform: 'development',
-                urlParams: [ ]
-            }
-        );
-        driver.module("not a module", {action: 'summoner-info', params: {summonerName: 'Mamoritai'}}).should.to.be.rejected.and.notify(done);
-    });
-
-    it('should fail with unexpected action', function(done){
-        var driver = new APIDriver(Endpoints,
-            API,
-            {
-                api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
-                region: 'NA',
-                platform: 'development',
-                urlParams: [ ]
-            }
-        );
-        driver.module("legacy", {action: 'not an action', params: {summonerName: 'Mamoritai'}}).should.to.be.rejected.and.notify(done);
-    });
-
-    it('should call with urlparams', function(done){
-        var driver = new APIDriver(Endpoints,
-            API,
-            {
-                api_key: 'b1d29328-72ca-4d03-b9e2-be254f4379d6',
-                region: 'NA',
-                platform: 'development',
-                urlParams: [ ]
-            }
-        );
-        driver.module("legacy", {action: 'match-info', params: {matchId: 1965880269}, urlParams: {includeTimeline: true}}).should.to.be.fulfilled.then(function (result) {
-            result.matchId.should.equal(1965880269);
-        }).should.notify(done);
-    });
+    expect(result)
+      .to.have.property('matchId', 1965880269);
+  }));
 
 
 });
