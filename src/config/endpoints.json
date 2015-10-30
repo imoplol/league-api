@@ -1,7 +1,7 @@
 {
   "endpoints":{
     "NA": {
-      "protocol": "https://",
+      "protocol": "https",
       "endpoint": "na.api.pvp.net",
       "limit": {
         "development": {

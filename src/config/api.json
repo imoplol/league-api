@@ -19,7 +19,7 @@
         "free-champion":{
           "variations":[
             "champion",
-            "champion/{id}"
+            "champion/<%= id %>"
           ],
           "options": {
             "path": "/api/lol/na",
@@ -30,7 +30,7 @@
         "current-game":
         {
           "variations":[
-            "getSpectatorGameInfo/NA1/{summonerID}"
+            "getSpectatorGameInfo/NA1/<%= summonerID %>"
           ],
           "options": {
             "path": "/observer-mode/rest/consumer",
@@ -41,7 +41,7 @@
         "recent-game":
         {
           "variations":[
-            "game/by-summoner/{summonerID}/recent"
+            "game/by-summoner/<%= summonerID %>/recent"
           ],
           "options": {
             "path": "/api/lol/na",
@@ -52,7 +52,7 @@
         "summoner":
         {
           "variations":[
-            "summoner/by-name/{summonerName}"
+            "summoner/by-name/<%= summonerName %>"
           ],
           "options": {
             "path": "/api/lol/na",
@@ -64,7 +64,7 @@
         {
           "variations":[
             "champion",
-            "champion/{id}"
+            "champion/<%= id %>"
           ],
           "options": {
             "path": "/api/lol/static-data/na",
@@ -76,7 +76,7 @@
         {
           "variations":[
             "item",
-            "item/{id}"
+            "item/<%= id %>"
           ],
           "options": {
             "path": "/api/lol/static-data/na",
@@ -88,7 +88,7 @@
         {
           "variations":[
             "mastery",
-            "mastery/{id}"
+            "mastery/<%= id %>"
           ],
           "options": {
             "path": "/api/lol/static-data/na",
@@ -100,7 +100,7 @@
         {
           "variations":[
             "summoner-spell",
-            "summoner-spell/{id}"
+            "summoner-spell/<%= id %>"
           ],
           "options": {
             "path": "/api/lol/static-data/na",
@@ -111,7 +111,7 @@
         "match-info":
         {
           "variations":[
-            "match/{matchId}"
+            "match/<%= matchId %>"
           ],
           "options": {
             "path": "/api/lol/na",
@@ -122,7 +122,7 @@
         "summoner-ranked":
         {
           "variations":[
-            "stats/by-summoner/{summonerId}/ranked"
+            "stats/by-summoner/<%= summonerId %>/ranked"
           ],
           "options": {
             "path": "/api/lol/na",
@@ -133,7 +133,7 @@
         "summoner-summary":
         {
           "variations":[
-            "stats/by-summoner/{summonerId}/summary"
+            "stats/by-summoner/<%= summonerId %>/summary"
           ],
           "options": {
             "path": "/api/lol/na",
@@ -144,7 +144,7 @@
         "summoner-info":
         {
           "variations":[
-            "summoner/by-name/{summonerName}"
+            "summoner/by-name/<%= summonerName %>"
           ],
           "options": {
             "path": "/api/lol/na",

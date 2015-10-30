@@ -2,126 +2,123 @@
  * index.js
  *
  * @author  Siyuan Gao <siyuangao@gmail.com>
+ * @author  Denis Luchkin-Zhou <denis@ricepo.com>
  * @license MIT
  */
+
+import _           from 'lodash';
+import FS          from 'fs';
+import Path        from 'path';
+import Debug       from 'debug';
+import TokenBucket from 'tokenbucket';
+
+import buildUrl    from './util/url-builder';
+
+
+/*!
+ * Symbol to hide extension tracking.
+ */
+const exts = Symbol();
+
 
 /*!
  *  API Driver for imop.lol
  */
-import  Winston         from 'winston';
-import  _               from 'lodash';
-import  TokenBucket     from 'tokenbucket';
-import  Promise         from 'bluebird';
-
 class APIDriver {
-    /*!
-     *  Sample options
-     *  {
-     *      api_key: '00e033....',
-     *      platform: 'production',
-     *      region: 'NA'
-     *
-     *  }
-     */
-    constructor(endpoints, api, options) {
+  /*!
+   *  Sample options
+   *  {
+   *      api_key: '00e033....',
+   *      platform: 'production',
+   *      region: 'NA'
+   *
+   *  }
+   */
+  constructor(endpoints, api, options) {
 
-        let TAG = "APIDriver:constructor";
+    const debug = Debug('APIDriver:constructor');
 
-        //  Sets class properties
-        this.endpoints      = endpoints;
-        this.api            = api;
-        this.options        = options;
-        this.api_key        = options.api_key;
-        this.defaultParams  = [`api_key=${this.api_key}`];
-        //  These are the two buckets used for rate limiting
-        this.bucketS = new TokenBucket({
-            size: this.endpoints.endpoints[options.region].limit[options.platform].S.request,
-            tokensToAddPerInterval: this.endpoints.endpoints[options.region].limit[options.platform].S.request,
-            interval: this.endpoints.endpoints[options.region].limit[options.platform].S.interval,
-            maxWait: 'minute'
-        });
-        this.bucketM = new TokenBucket({
-            size: this.endpoints.endpoints[options.region].limit[options.platform].M.request,
-            tokensToAddPerInterval: this.endpoints.endpoints[options.region].limit[options.platform].M.request,
-            interval: this.endpoints.endpoints[options.region].limit[options.platform].M.interval,
-            maxWait: 'minute',
-            parentBucket: this.bucketS
-        });
-        this.L = new (Winston.Logger)({
-            transports: [
-                new (Winston.transports.Console)({
-                    colorize    : 'all',
-                    level       : 'verbose'
-                })
-            ]
-        });
-        this.log = {
-            verbose :   (tag, log) => {this.L.verbose(`[${tag}] : ${log}`);},
-            info    :   (tag, log) => {this.L.info(`[${tag}] : ${log}`);},
-            error   :   (tag, log) => {this.L.error(`[${tag}] : ${log}`);},
-            warn    :   (tag, log) => {this.L.warn(`[${tag}] : ${log}`);}
-        };
-        //  Load all modules for the league driver
-        this.loadModules();
-        this.log.verbose(TAG, `started with options: ${JSON.stringify(options)}`);
+    /* Sets class properties */
+    this.api           = api;
+    this.options       = options;
+    this.endpoints     = endpoints;
+    this.api_key       = options.api_key;
+    this.defaultParams = { api_key: this.api_key };
+
+    /* These are the two buckets used for rate limiting */
+    const bucketConfig = this.endpoints.endpoints[options.region].limit[options.platform];
+    this.bucketS = new TokenBucket({
+      maxWait: 'minute',
+      size: bucketConfig.S.request,
+      interval: bucketConfig.S.interval,
+      tokensToAddPerInterval: bucketConfig.S.request
+    });
+    this.bucketM = new TokenBucket({
+      maxWait: 'minute',
+      size: bucketConfig.M.request,
+      parentBucket: this.bucketS,
+      interval: bucketConfig.M.interval,
+      tokensToAddPerInterval: bucketConfig.M.request
+    });
+
+    /* URL Builder */
+    this.buildUrl = _.partial(buildUrl, endpoints, api);
+
+    /* Load all modules for the league driver */
+    this[exts] = new Set();
+    this.loadModules();
+    debug(`Started with options: ${JSON.stringify(options)}`);
+  }
+
+  use(fn) {
+    if (fn.__esModule) { fn = fn.default; }
+
+    if (!this[exts].has(fn)) { fn(this); }
+  }
+
+  loadModules() {
+
+    /* Log tag */
+    const debug = Debug('APIDriver:loadModules');
+
+    /* Filename regex */
+    const regex = /^([a-z0-9_]+).js$/;
+
+    /* Loading all modules */
+    const filenames = FS.readdirSync(Path.join(__dirname, 'modules'));
+
+    /* Loop through the files and load them into the class. */
+    for (const file of filenames) {
+      if (!regex.test(file)) { continue; }
+
+      debug(`Loading module: ${file}`);
+      this.use(require(`./modules/${regex.exec(file)[1]}`));
     }
 
-    loadModules() {
-        //  Log tag
-        let TAG = "APIDriver:loadModules";
-        //  Filename regex
-        var regex = /^([a-z0-9_]+).js$/;
+  }
 
-        //  Loading all modules
-        var filenames = require("fs").readdirSync(require("path").join(__dirname, 'modules'));
+  loadModule(file) {
+    /* Log tag */
+    const debug = Debug('APIDriver:loadModule');
+    debug(`Loading module: ${file}`);
+    this.use(require(file));
+  }
 
-        //  Loop through the files and load them into the class.
-        for(var file of filenames) {
-            if(regex.test(file)) {
-                this.log.info(TAG, `Loading module: ${file}`);
-                _.assign(this, require(`./modules/${regex.exec(file)[1]}`));
-            }
-        }
+  async module(name, options) {
+
+    const debug = Debug('APIDriver:module');
+    const fn  = this[name];
+
+    /* Module in question must be a function */
+    if (typeof fn !== 'function') {
+      throw new Error('Module is not a function.');
     }
-    loadModule(file) {
-        //  Log tag
-        let TAG = "APIDriver:loadModule";
-        this.log.info(TAG, `Loading module: ${file}`);
-        _.assign(this, require(file));
-    }
-    module(name, options) {
 
-        let TAG = 'APIDriver:module';
-
-        //console.log(this);
-
-        //  This is the only access for modules, provide rate limiting
-        if(typeof(this[name]) == 'function') {
-            //  Invoke function
-            this.log.verbose(TAG, `invoking module: ${name}`);
-            var urlParams = [];
-            if(options.urlParams) {
-                for(let property of Object.keys(options.urlParams)) {
-                    urlParams.push(`${property}=${options.urlParams[property]}`);
-                }
-            }
-            return new Promise((resolve, reject) => {
-                this[name](options, _.union(urlParams, this.defaultParams)).then((result) => {
-                    resolve(result);
-                }).catch((e) => {
-                    reject(e);
-                });     //  Finally call the function and return
-            });
-        } else {
-            this.log.verbose(TAG, `invoking module: ${name} error`);
-            return new Promise(function (resolve, reject) {
-                reject({
-                    type: 'error',
-                    error: 'module is not a function'
-                });
-            });
-        }
-    }
+    /* Invoke the module function */
+    debug(`invoking module: ${name}`);
+    const params = _.defaults({ }, options.urlParams, this.defaultParams);
+    return this[name](options, params);
+  }
 
 }
 
